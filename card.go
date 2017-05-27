@@ -19,6 +19,8 @@ package trello
 import (
 	"encoding/json"
 	"net/url"
+	//"net/http"
+    "strconv"
 )
 
 type Card struct {
@@ -187,4 +189,12 @@ func (c *Card) AddComment(text string) (*Action, error) {
 	}
 	newAction.client = c.client
 	return newAction, nil
+}
+
+func (c *Card) Archive(mode bool) error {
+	payload := url.Values{}
+	payload.Set("value", strconv.FormatBool(mode))
+
+	_, err := c.client.Put("/cards/"+c.Id+"/closed", payload)
+	return err
 }
